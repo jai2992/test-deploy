@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .controls {
+            padding: 1rem;
+            background: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .url-input {
+            width: 70%;
+            padding: 0.5rem;
+            margin-right: 0.5rem;
+        }
+        
+        .load-btn {
+            padding: 0.5rem 1rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .load-btn:hover {
+            background: #0056b3;
+        }
+        
+        .iframe-container {
+            flex-grow: 1;
+            position: relative;
+        }
+        
+        #site-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .error-message {
+            color: red;
+            margin-top: 0.5rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <input type="url" class="url-input" placeholder="Enter website URL (e.g., https://example.com)" required>
+        <button class="load-btn">Load Website</button>
+        <div class="error-message">Unable to load the website. The site might be blocking iframe embedding.</div>
+    </div>
+    <div class="iframe-container">
+        <iframe id="site-frame" title="Website Display" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+    </div>
+
+    <script>
+        const urlInput = document.querySelector('.url-input');
+        const loadBtn = document.querySelector('.load-btn');
+        const iframe = document.querySelector('#site-frame');
+        const errorMessage = document.querySelector('.error-message');
+
+        loadBtn.addEventListener('click', () => {
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('Please enter a valid URL');
+                return;
+            }
+
+            try {
+                new URL(url);
+                iframe.src = url;
+                errorMessage.style.display = 'none';
+            } catch (e) {
+                alert('Please enter a valid URL including https:// or http://');
+            }
+        });
+
+        iframe.addEventListener('load', () => {
+            errorMessage.style.display = 'none';
+        });
+
+        iframe.addEventListener('error', () => {
+            errorMessage.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
